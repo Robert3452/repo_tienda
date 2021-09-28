@@ -1,20 +1,38 @@
+const { Model, DataTypes } = require('sequelize');
+const { Product } = require('./product')
+const User  = require('./user')
+const { sequelize } = require('../db')
 
-const OrderModel = (sequelize, type) =>
-    sequelize.define('order', {
-        total: type.FLOAT,
-        status: type.STRING,
-        totalIgv: type.FLOAT,
-        igv: type.FLOAT
-    })
 
-const OrderDetailModel = (sequelize, type) =>
-    sequelize.define('orderDetail', {
-        productName: type.STRING,
-        price: type.FLOAT,
-        quantity: type.INTEGER
-    })
+class Order extends Model { };
+class OrderDetail extends Model { };
+
+Order.init({
+    total: DataTypes.FLOAT,
+    status: DataTypes.STRING,
+    totalIgv: DataTypes.FLOAT,
+    igv: DataTypes.FLOAT
+}, {
+    sequelize,
+    modelName: "order"
+})
+
+OrderDetail.init({
+    productName: DataTypes.STRING,
+    price: DataTypes.FLOAT,
+    quantity: DataTypes.INTEGER
+}, {
+    sequelize,
+    modelName: 'orderdetail'
+})
+
+
+Order.hasMany(OrderDetail);
+OrderDetail.belongsTo(Order);
+OrderDetail.belongsTo(Product);
+Order.belongsTo(User);
 
 module.exports = {
-    OrderModel,
-    OrderDetailModel
+    Order,
+    OrderDetail
 }

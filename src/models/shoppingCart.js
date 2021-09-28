@@ -1,19 +1,36 @@
+const { Model, DataTypes } = require('sequelize');
+const { sequelize } = require('../db')
+const User = require('./user');
+const { Product } = require('./product');
+class ShoppingCart extends Model { };
+class ShoppingCartDetail extends Model { };
 
-const ShoppingCartModel = (sequelize, type) =>
-    sequelize.define('shoppingCart', {
-        total: type.FLOAT,
-        totalIgv: type.FLOAT,
-        igv: type.FLOAT
-    })
+ShoppingCart.init(
+    {
+        total: DataTypes.FLOAT,
+        totalIgv: DataTypes.FLOAT,
+        igv: DataTypes.FLOAT
+    },
+    {
+        sequelize,
+        modelName: "shoppingcart"
+    }
+);
+ShoppingCartDetail.init({
+    productName: DataTypes.STRING,
+    price: DataTypes.FLOAT,
+    quantity: DataTypes.INTEGER
+}, {
+    sequelize,
+    modelName: "shoppingcartdetail"
 
-const ShoppingCartDetailModel = (sequelize, type) =>
-    sequelize.define('shoppingCartDetail', {
-        productName: type.STRING,
-        price: type.FLOAT,
-        quantity: type.INTEGER
-    })
+})
+ShoppingCart.hasMany(ShoppingCartDetail);
+ShoppingCartDetail.belongsTo(Product);
+ShoppingCartDetail.belongsTo(ShoppingCart);
+ShoppingCart.belongsTo(User);
 
 module.exports = {
-    ShoppingCartModel,
-    ShoppingCartDetailModel
+    ShoppingCart,
+    ShoppingCartDetail
 }

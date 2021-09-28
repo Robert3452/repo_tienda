@@ -1,24 +1,32 @@
-const scope = (sequelize, type) => {
-    return sequelize.define('scope', {
-        id: {
-            type: type.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-        },
-        token: { type: type.STRING },
-        role: { type: type.STRING },
+const { Model, DataTypes } = require('sequelize');
+const { sequelize } = require('../db')
 
-    });
-}
-const permission = (sequelize, type) => sequelize.define('permission', {
-    id: {
-        type: type.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    permission: { type: type.STRING },
+class Scope extends Model { };
+
+Scope.init({
+    token: { type: DataTypes.STRING },
+    role: { type: DataTypes.STRING },
+
+}, {
+    sequelize,
+    modelName: "scope"
+})
+
+
+class Permission extends Model {};
+
+Permission.init({
+    permission: { type: DataTypes.STRING },
+
+},{
+    sequelize,
+    modelName: "permission"
 });
+
+Permission.belongsTo(Scope);
+Scope.hasMany(Permission);
+
 module.exports = {
-    scope,
-    permission
+    Permission,
+    Scope
 }

@@ -1,29 +1,28 @@
-const ProductModel = (sequelize, type) =>
-    sequelize.define('product', {
-        id: {
-            type: type.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-        },
-        name: type.STRING,
-        description: type.STRING,
-        image: type.STRING
+const { Model, DataTypes } = require('sequelize');
+const { sequelize } = require('../db')
+class Product extends Model { }
+class Variation extends Model { }
 
-    })
+Product.init({
+    name: DataTypes.STRING,
+    description: DataTypes.STRING,
+    image: DataTypes.STRING
+}, {
+    sequelize,
+    modelName: "product"
 
-const VariationModel = (sequelize, type) =>
-    sequelize.define('variation', {
-        id: {
-            type: type.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-        },
-        metaKey: type.STRING,
-        metaValue: type.STRING
-    })
+})
+
+Variation.init({
+    metaKey: DataTypes.STRING,
+    metaValue: DataTypes.STRING
+}, {
+    sequelize,
+    modelName: "variation"
+})
 
 
 module.exports = {
-    ProductModel,
-    VariationModel
+    Product,
+    Variation
 }
